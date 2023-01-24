@@ -20,7 +20,7 @@ async function findAssociatedTokenAddress(
     ))[0];
 }
 
-async function transferLamport(connection: Connection, feePayer: Keypair, destination: PublicKey, amount: number, epoch: string): Promise<string>{
+async function transferLamports(connection: Connection, feePayer: Keypair, destination: PublicKey, amount: number, epoch: string): Promise<string>{
 
   // https://solanacookbook.com/references/basic-transactions.html#how-to-send-sol
   const transferTransaction = new Transaction().add(
@@ -83,7 +83,7 @@ async function swapNburn(connection: Connection, feePayer: Keypair, amount: numb
     tokenAccountPubkey, // token account
     mintPubkey, // mint
     feePayer.publicKey, // owner of token account
-    amount, // amount, if your deciamls is 8, 10^8 for 1 token
+    routes[0].otherAmountThreshold, // amount
     5 // decimals
   )
 
@@ -139,10 +139,20 @@ async function swapNburn(connection: Connection, feePayer: Keypair, amount: numb
 
   if (argv.type == 'transfer'){
     const destination = new PublicKey(argv.destination);
-    txid = await transferLamport(connection, feePayer, destination, amount, argv.epoch)
+    try{
+      txid = await transferLamports(connection, feePayer, destination, amount, argv.epoch)
+    }
+    catch{
+      txid = 'pending'
+    }
   }
   else if (argv.type = 'burn'){
-    txid = await swapNburn(connection, feePayer, amount, argv.epoch)
+    try{
+      txid = await swapNburn(connection, feePayer, amount, argv.epoch)
+    }
+    catch{
+      txid = 'pending'
+    }
   }
 
   console.log(txid)
