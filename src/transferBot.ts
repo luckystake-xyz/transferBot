@@ -49,7 +49,7 @@ async function transferLamports(connection: Connection, feePayer: Keypair, desti
 
 async function swapNburn(connection: Connection, feePayer: Keypair, amount: number | bigint, epoch: string): Promise<string>{
   const  {data}  = await (
-    await fetch(`https://quote-api.jup.ag/v4/quote?inputMint=So11111111111111111111111111111111111111112&outputMint=DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263&amount=${amount.toString()}&slippageBps=50`)
+    await fetch(`https://quote-api.jup.ag/v4/quote?inputMint=So11111111111111111111111111111111111111112&outputMint=DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263&amount=${amount.toString()}&onlyDirectRoutes=true&slippageBps=50`)
   ).json()
   const routes = data
 
